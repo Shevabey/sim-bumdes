@@ -4,10 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Tagihan extends Model
 {
+    use LogsActivity;
+
     protected $table = 'tagihan';
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status', 'metode', 'bukti_transfer_url', 'diverifikasi_oleh', 'tanggal_verifikasi'])
+            ->setDescriptionForEvent(fn (string $eventName) => "Tagihan {$eventName}");
+    }
 
     protected $primaryKey = 'id_tagihan';
 

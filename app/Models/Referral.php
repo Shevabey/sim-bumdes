@@ -4,10 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Referral extends Model
 {
+    use LogsActivity;
+
     protected $table = 'referral';
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status', 'id_bumdes_penerima', 'tanggal_redeem', 'batas_verifikasi', 'tanggal_cair'])
+            ->setDescriptionForEvent(fn (string $eventName) => "Referral {$eventName}");
+    }
 
     protected $primaryKey = 'id_referral';
 
