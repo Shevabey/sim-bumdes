@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\IuranMenunggakWidget;
+use App\Filament\Widgets\UnitTanpaAktivitasWidget;
+use App\Filament\Widgets\VerifikasiTertundaWidget;
 use App\Livewire\NotifikasiBadge;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -41,6 +44,10 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                // FR-29, FR-30: Widget monitoring operasional BUMDes
+                IuranMenunggakWidget::class,
+                VerifikasiTertundaWidget::class,
+                UnitTanpaAktivitasWidget::class,
             ])
             // FR-34: Pasang badge notifikasi di pojok kanan atas panel admin
             ->renderHook(
