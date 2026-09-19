@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Akun;
 use App\Models\Transaksi;
 
 class TransaksiPolicy
 {
-    public function viewAny(Akun $akun): bool
+    public function viewAny(object $akun): bool
     {
         return $this->hasAnyRole($akun, [
             'super_admin',
@@ -18,7 +17,7 @@ class TransaksiPolicy
         ]);
     }
 
-    public function view(Akun $akun, Transaksi $transaksi): bool
+    public function view(object $akun, Transaksi $transaksi): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -34,12 +33,12 @@ class TransaksiPolicy
             && $akun->id_unit === $transaksi->id_unit;
     }
 
-    public function create(Akun $akun): bool
+    public function create(object $akun): bool
     {
         return $this->hasAnyRole($akun, ['super_admin', 'admin_bumdes', 'bendahara', 'admin_unit']);
     }
 
-    public function update(Akun $akun, Transaksi $transaksi): bool
+    public function update(object $akun, Transaksi $transaksi): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -55,22 +54,22 @@ class TransaksiPolicy
             && $akun->id_unit === $transaksi->id_unit;
     }
 
-    public function delete(Akun $akun, Transaksi $transaksi): bool
+    public function delete(object $akun, Transaksi $transaksi): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    public function restore(Akun $akun, Transaksi $transaksi): bool
+    public function restore(object $akun, Transaksi $transaksi): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    public function forceDelete(Akun $akun, Transaksi $transaksi): bool
+    public function forceDelete(object $akun, Transaksi $transaksi): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    private function hasRole(Akun $akun, string $role): bool
+    private function hasRole(object $akun, string $role): bool
     {
         if (method_exists($akun, 'hasRole')) {
             return $akun->hasRole($role);
@@ -79,7 +78,7 @@ class TransaksiPolicy
         return $akun->role === $role;
     }
 
-    private function hasAnyRole(Akun $akun, array $roles): bool
+    private function hasAnyRole(object $akun, array $roles): bool
     {
         foreach ($roles as $role) {
             if ($this->hasRole($akun, $role)) {

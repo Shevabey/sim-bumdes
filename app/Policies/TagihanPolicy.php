@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Akun;
 use App\Models\Tagihan;
 
 class TagihanPolicy
 {
-    public function viewAny(Akun $akun): bool
+    public function viewAny(object $akun): bool
     {
         return $this->hasAnyRole($akun, [
             'super_admin',
@@ -19,7 +18,7 @@ class TagihanPolicy
         ]);
     }
 
-    public function view(Akun $akun, Tagihan $tagihan): bool
+    public function view(object $akun, Tagihan $tagihan): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -38,12 +37,12 @@ class TagihanPolicy
             && $tagihan->pelanggan?->id_akun === $akun->id_akun;
     }
 
-    public function create(Akun $akun): bool
+    public function create(object $akun): bool
     {
         return $this->hasAnyRole($akun, ['super_admin', 'admin_bumdes', 'bendahara', 'admin_unit']);
     }
 
-    public function update(Akun $akun, Tagihan $tagihan): bool
+    public function update(object $akun, Tagihan $tagihan): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -59,7 +58,7 @@ class TagihanPolicy
             && $akun->id_unit === $tagihan->id_unit;
     }
 
-    public function verify(Akun $akun, Tagihan $tagihan): bool
+    public function verify(object $akun, Tagihan $tagihan): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -70,7 +69,7 @@ class TagihanPolicy
             && $tagihan->unitUsaha?->id_bumdes === $akun->id_bumdes;
     }
 
-    public function payCash(Akun $akun, Tagihan $tagihan): bool
+    public function payCash(object $akun, Tagihan $tagihan): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -86,22 +85,22 @@ class TagihanPolicy
             && $akun->id_unit === $tagihan->id_unit;
     }
 
-    public function delete(Akun $akun, Tagihan $tagihan): bool
+    public function delete(object $akun, Tagihan $tagihan): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    public function restore(Akun $akun, Tagihan $tagihan): bool
+    public function restore(object $akun, Tagihan $tagihan): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    public function forceDelete(Akun $akun, Tagihan $tagihan): bool
+    public function forceDelete(object $akun, Tagihan $tagihan): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    private function hasRole(Akun $akun, string $role): bool
+    private function hasRole(object $akun, string $role): bool
     {
         if (method_exists($akun, 'hasRole')) {
             return $akun->hasRole($role);
@@ -110,7 +109,7 @@ class TagihanPolicy
         return $akun->role === $role;
     }
 
-    private function hasAnyRole(Akun $akun, array $roles): bool
+    private function hasAnyRole(object $akun, array $roles): bool
     {
         foreach ($roles as $role) {
             if ($this->hasRole($akun, $role)) {

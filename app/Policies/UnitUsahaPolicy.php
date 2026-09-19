@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Akun;
 use App\Models\UnitUsaha;
 
 class UnitUsahaPolicy
 {
-    public function viewAny(Akun $akun): bool
+    public function viewAny(object $akun): bool
     {
         return $this->hasAnyRole($akun, [
             'super_admin',
@@ -18,7 +17,7 @@ class UnitUsahaPolicy
         ]);
     }
 
-    public function view(Akun $akun, UnitUsaha $unit): bool
+    public function view(object $akun, UnitUsaha $unit): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -31,12 +30,12 @@ class UnitUsahaPolicy
         return $this->hasRole($akun, 'admin_unit') && $this->sameUnit($akun, $unit);
     }
 
-    public function create(Akun $akun): bool
+    public function create(object $akun): bool
     {
         return $this->hasAnyRole($akun, ['super_admin', 'admin_bumdes']);
     }
 
-    public function update(Akun $akun, UnitUsaha $unit): bool
+    public function update(object $akun, UnitUsaha $unit): bool
     {
         if ($this->hasRole($akun, 'super_admin')) {
             return true;
@@ -49,37 +48,37 @@ class UnitUsahaPolicy
         return false;
     }
 
-    public function toggleStatus(Akun $akun, UnitUsaha $unit): bool
+    public function toggleStatus(object $akun, UnitUsaha $unit): bool
     {
         return $this->hasRole($akun, 'admin_bumdes') && $this->sameBumdes($akun, $unit);
     }
 
-    public function delete(Akun $akun, UnitUsaha $unit): bool
+    public function delete(object $akun, UnitUsaha $unit): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    public function restore(Akun $akun, UnitUsaha $unit): bool
+    public function restore(object $akun, UnitUsaha $unit): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    public function forceDelete(Akun $akun, UnitUsaha $unit): bool
+    public function forceDelete(object $akun, UnitUsaha $unit): bool
     {
         return $this->hasRole($akun, 'super_admin');
     }
 
-    private function sameBumdes(Akun $akun, UnitUsaha $unit): bool
+    private function sameBumdes(object $akun, UnitUsaha $unit): bool
     {
         return $akun->id_bumdes !== null && $akun->id_bumdes === $unit->id_bumdes;
     }
 
-    private function sameUnit(Akun $akun, UnitUsaha $unit): bool
+    private function sameUnit(object $akun, UnitUsaha $unit): bool
     {
         return $akun->id_unit !== null && $akun->id_unit === $unit->id_unit;
     }
 
-    private function hasRole(Akun $akun, string $role): bool
+    private function hasRole(object $akun, string $role): bool
     {
         if (method_exists($akun, 'hasRole')) {
             return $akun->hasRole($role);
@@ -88,7 +87,7 @@ class UnitUsahaPolicy
         return $akun->role === $role;
     }
 
-    private function hasAnyRole(Akun $akun, array $roles): bool
+    private function hasAnyRole(object $akun, array $roles): bool
     {
         foreach ($roles as $role) {
             if ($this->hasRole($akun, $role)) {
